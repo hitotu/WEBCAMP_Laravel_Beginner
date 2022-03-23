@@ -9,14 +9,14 @@
             @if (session('front.task_register_success') == true)
                 タスクを登録しました！！<br>
             @endif
-             @if ($errors->any())
+            @if ($errors->any())
                 <div>
                 @foreach ($errors->all() as $error)
                     {{ $error }}<br>
                 @endforeach
                 </div>
             @endif
-            <form action="./top.html" method="post">
+            <form action="/task/register" method="post">
                 @csrf
                 タスク名:<input name="name" value="{{ old('name') }}"><br>
                 期限:<input name="period" type="date" value="{{ old('period') }}"><br>
@@ -34,43 +34,24 @@
             <th>タスク名
             <th>期限
             <th>重要度
+@foreach ($list as $task)
         <tr>
-            <td>HTML formの学習
-            <td>2022/01/01
-            <td>普通
+            <td>{{ $task->name }}
+            <td>{{ $task->period }}
+            <td>{{ $task->getPriorityString() }}
             <td><a href="./detail.html">詳細閲覧</a>
             <td><a href="./edit.html">編集</a>
             <td><form action="./top.html"><button>完了</button></form>
-        <tr>
-            <td>PHPの学習
-            <td>2022/01/15
-            <td>普通
-            <td><a href="./detail.html">詳細閲覧</a>
-            <td><a href="./edit.html">編集</a>
-            <td><form action="./top.html"><button>完了</button></form>
-        <tr>
-            <td>RDBの学習
-            <td>2022/02/01
-            <td>普通
-            <td><a href="./detail.html">詳細閲覧</a>
-            <td><a href="./edit.html">編集</a>
-            <td><form action="./top.html"><button>完了</button></form>
-        <tr>
-            <td>Larabelの学習
-            <td>2022/02/15
-            <td>普通
-            <td><a href="./detail.html">詳細閲覧</a>
-            <td><a href="./edit.html">編集</a>
-            <td><form action="./top.html"><button>完了</button></form>
+@endforeach
         </table>
         <!-- ページネーション -->
         現在 1 ページ目<br>
         <a href="./top.html">最初のページ(未実装)</a> /
         <a href="./top.html">前に戻る(未実装)</a> /
-        <a href="./top.html">次に進む(未実装)</a> /
+        <a href="./top.html">次に進む(未実装)</a>
         <br>
         <hr>
         <menu label="リンク">
-        <a href="./index.html">ログアウト</a>
+        <a href="/logout">ログアウト</a><br>
         </menu>
 @endsection
