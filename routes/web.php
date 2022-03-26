@@ -23,13 +23,14 @@ Route::post('/login', [AuthController::class, 'login']);
 // 認可処理
 Route::middleware(['auth'])->group(function () {
     Route::prefix('/task')->group(function () {
-        Route::get('/task/list', [TaskController::class, 'list']);
-        Route::post('/task/register', [TaskController::class, 'register']);
-        Route::get('/task/detail/{task_id}', [TaskController::class, 'detail'])->whereNumber('task_id')->name('detail');
+        Route::get('/list', [TaskController::class, 'list']);
+        Route::post('/register', [TaskController::class, 'register']);
+        Route::get('/detail/{task_id}', [TaskController::class, 'detail'])->whereNumber('task_id')->name('detail');
         Route::get('/edit/{task_id}', [TaskController::class, 'edit'])->whereNumber('task_id')->name('edit');
         Route::put('/edit/{task_id}', [TaskController::class, 'editSave'])->whereNumber('task_id')->name('edit_save');
         Route::delete('/delete/{task_id}', [TaskController::class, 'delete'])->whereNumber('task_id')->name('delete');
         Route::post('/complete/{task_id}', [TaskController::class, 'complete'])->whereNumber('task_id')->name('complete');
+        Route::get('/csv/download', [TaskController::class, 'csvDownload']);
         });
         //
         Route::get('/logout', [AuthController::class, 'logout']);

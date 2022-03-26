@@ -36,8 +36,8 @@
                 <button>タスクを登録する</button>
             </form>
 
-        <h1>タスクの一覧(未実装)</h1>
-        <a href="./top.html">CSVダウンロード(未実装)</a><br>
+        <h1>タスクの一覧</h1>
+        <a href="/task/csv/download">CSVダウンロード</a><br>
         <table border="1">
         <tr>
             <th>タスク名
@@ -54,13 +54,13 @@
             <td><form action="{{ route('complete', ['task_id' => $task->id]) }}" method="post"> @csrf <button onclick='return confirm("このタスクを「完了」にします。よろしいですか？");' >完了</button></form>
 @endforeach
         </table>
-         <!-- ページネーション -->
+        <!-- ページネーション -->
         {{-- {{ $list->links() }} --}}
         現在 {{ $list->currentPage() }} ページ目<br>
         @if ($list->onFirstPage() === false)
-        <a href="/task/list">最初のページ</a>
+            <a href="/task/list">最初のページ</a>
         @else
-        最初のページ
+            最初のページ
         @endif
         /
         @if ($list->previousPageUrl() !== null)
