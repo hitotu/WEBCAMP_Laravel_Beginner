@@ -14,6 +14,19 @@ class CreateindexTastsUserId extends Migration
     public function up()
     {
         //
+        Schema::create('tasks', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 128)->comment('タスク名');
+            $table->date('period')->comment('タスクの期限');
+            $table->text('detail')->comment('タスクの詳細');
+            $table->unsignedTinyInteger('priority')->comment('重要度:(1:低い, 2:普通, 3:高い)');
+            $table->unsignedBigInteger('user_id')->comment('このタスクの所有者');
+            $table->foreign('user_id')->references('id')->on('users'); // 外部キー制約
+            //$table->timestamps();
+            $table->dateTime('created_at')->useCurrent();
+            $table->dateTime('updated_at')->useCurrent()->useCurrentOnUpdate();
+        });
+        
         Schema::table('tasks', function (Blueprint $table) {
             $table->index('user_id');
         });
