@@ -224,50 +224,45 @@ var_dump($sql);
      */
     public function csvDownload()
     {
-        // 一覧取得用のBuilderインスタンスを取得
-        $builder = $this->getListBuilder();
+        $data_list = [
+            'id' => 'タスクID',
+            'name' => 'タスク名',
+            'priority' => '重要度',
+            'period' => '期限',
+            'detail' => 'タスク詳細',
+            'created_at' => 'タスク作成日',
+            'updated_at' => 'タスク修正日',
+        ];
 
-        // 「動的にresponseを作る」インスタンスをreturnする
-        return new 	(
-            function () use ($builder) {
-                // CSVの並び順設定
-                $data_list = [
-                    'id' => 'タスクID',
-                    'name' => 'タスク名',
-                    'priority' => '重要度',
-                    'period' => '期限',
-                    'detail' => 'タスク詳細',
-                    'created_at' => 'タスク作成日',
-                    'updated_at' => 'タスク修正日',
-                ];
+        /* 「ダウンロードさせたいCSV」を作成する */
+        // データを取得する
+        $list = $this->getListBuilder()->get();
 
-                // 出力＋文字コード変換
-                $file = new \SplFileObject('php://filter/write=convert.iconv.UTF-8%2FSJIS/resource=php://output', 'w');
+        // バッファリングを開始
+        ob_start();
 
-                // データを「指定件数」づつ取得
-                $builder->chunk(1000, function ($tasks) use ($file, $data_list) {
-                    // 取得した「指定件数」毎に処理
-                    foreach ($tasks as $datum) {
-                        $awk = []; // 作業領域の確保
-                        // $data_listに書いてある順番に、書いてある要素だけを $awkに格納する
-                        foreach($data_list as $k => $v) {
-                            if ($k === 'priority') {
-                                $awk[] = $datum->getPriorityString();
-                            } else {
-                                $awk[] = $datum->$k;
-                            }
-                        }
-                        // CSVの1行を出力
-                        $file->fputcsv($awk);
-                    }
-                });
-            },
-            200,
-            [
-                'Content-Type' => 'text/csv',
-                'Content-Disposition' => 'attachment; filename="task_list.' . date('Ymd') . '.csv"',
-            ]
-        );
+        // 出力用のファイルハンドルを作成する
+        $file = new \SplFileObject('php://output', 'w');
+        // ヘッダを書き込む
+        $file->fputcsv(array_values($data_list));
+        // CSVをファイルに書き込む(出力する)
+        foreach($list as $datum) {
+            $file->fputcsv($datum->toArray());
+        }
+
+        // 現在のバッファの中身を取得し、出力バッファを削除する
+        $csv_string = ob_get_clean();
+
+        // 文字コードを変換する
+        $csv_string_sjis = mb_convert_encoding($csv_string, 'SJIS', 'UTF-8');
+        
+        // ダウンロードファイル名の作成
+        $download_filename = 'task_list.' . date('Ymd') . '.csv';
+        // CSVを出力する
+        return response($csv_string_sjis)
+                ->header('Content-Type', 'text/csv')
+                ->header('Content-Disposition', 'attachment; filename="test.csv"');
+    }
 
     /**
      * 一覧用の Illuminate\Database\Eloquent\Builder インスタンスの取得
