@@ -16,5 +16,4 @@
             パスワード：<input  name="password" type="password"><br>
             <button class="btn btn-primary mb-3">ログインする</button>
         </form>
-    </body>
 @endsection
