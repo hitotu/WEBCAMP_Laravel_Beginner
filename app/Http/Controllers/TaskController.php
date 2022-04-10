@@ -49,7 +49,8 @@ var_dump($sql);
         //var_dump($datum, $user, $id); exit;
 
         // user_id の追加
-        $datum['user_id'] = Auth::id();
+        //$datum['user_id'] = Auth::id();
+        $datum['user_id'] = auth::id();
 
         // テーブルへのINSERT
         try {
@@ -97,6 +98,7 @@ var_dump($sql);
             return null;
         }
         // 本人以外のタスクならNGとする
+        //if ($task->user_id !== Auth::id()) {
         if ($task->user_id !== Auth::id()) {
             return null;
         }
@@ -269,6 +271,7 @@ var_dump($sql);
      */
     protected function getListBuilder()
     {
+        //return TaskModel::where('user_id', Auth::id())
         return TaskModel::where('user_id', Auth::id())
                      ->orderBy('priority', 'DESC')
                      ->orderBy('period')
