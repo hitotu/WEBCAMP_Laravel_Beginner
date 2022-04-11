@@ -249,7 +249,17 @@ var_dump($sql);
         $file->fputcsv(array_values($data_list));
         // CSVをファイルに書き込む(出力する)
         foreach($list as $datum) {
-            $file->fputcsv($datum->toArray());
+            $awk = []; // 作業領域の確保
+            // $data_listに書いてある順番に、書いてある要素だけを $awkに格納する
+            foreach($data_list as $k => $v) {
+                if ($k === 'priority') {
+                    $awk[] = $datum->getPriorityString();
+                } else {
+                    $awk[] = $datum->$k;
+                }
+            }
+            // CSVの1行を出力
+            $file->fputcsv($awk);
         }
 
         // 現在のバッファの中身を取得し、出力バッファを削除する
