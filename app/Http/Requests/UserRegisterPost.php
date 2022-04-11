@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\Task as TaskModel;
 
-class UserRegisterPostRequest extends FormRequest
+class UserRegisterPost extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.

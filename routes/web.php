@@ -26,11 +26,11 @@ use App\Http\Controllers\CompletedTaskController;
 Route::get('/', [AuthController::class, 'index'])->name('front.index');
 Route::post('/login', [AuthController::class, 'login']);
 
-//
-Route::get('/user/registert', [UserController::class, 'index']);
-Route::post('/user/registert', [UserController::class, 'index']);
-//
-Route::get('/logout', [UserController::class, 'logout']);
+// 会員登録
+Route::prefix('/user')->group(function () {
+    Route::get('/register', [UserController::class, 'index'])->name('front.user.register');
+    Route::post('/register', [UserController::class, 'register'])->name('front.user.register.post');
+});
 
 // 認可処理
 Route::middleware(['auth'])->group(function () {
